@@ -19,16 +19,59 @@ namespace SRVN_time
     /// </summary>
     public partial class RaceControl : UserControl
     {
+
+        Race race = new Race("");
+
         public RaceControl(List<TimeSpan> times)
         {
             InitializeComponent();
+
+            raceTimes.ItemsSource = times;
+
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            var race = new Race(txtRace.Text);
-            
+            saveTimes();
         }
 
+
+        private void saveTimes()
+        {
+
+            race.Name = txtRace.Text;
+            race.BuildCorrectString();
+
+
+            bool success = false;
+            if (!String.IsNullOrEmpty(txtRace.Text))
+            {
+                
+
+
+                if (race.IsValid())
+                {
+                    txtRace.Text = race.Name;
+                    success = true;
+                }
+            }
+
+            if (success)
+            {
+                txtRace.Background = Brushes.LightGreen;
+            }
+            else
+            {
+                txtRace.Background = Brushes.IndianRed;
+            }
+        }
+
+        private void txtRace_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter || e.Key == Key.Return)
+            {
+                saveTimes();
+            }
+        }
     }
 }

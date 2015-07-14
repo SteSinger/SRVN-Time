@@ -21,8 +21,20 @@ namespace SRVN_time
         public MainWindow()
         {
             InitializeComponent();
-            panel.Children.Add(new RaceControl(null));
+
+            List<TimeSpan> list = new List<TimeSpan>();
+            list.Add(TimeSpan.Parse("00:01:12"));
+
+            panel.Children.Add(new RaceControl(list));
+            panel.Children.Add(new RaceControl(list));
+            panel.Children.Add(new RaceControl(list));
             //AddChild(new RaceControl(null));
+
+            list.Add(TimeSpan.Parse("00:01:13"));
+            list.Add(TimeSpan.Parse("00:02:12"));
+            list.Add(TimeSpan.Parse("00:03:12"));
+            list.Add(TimeSpan.Parse("00:04:12"));
+            list.Add(TimeSpan.Parse("00:05:12"));
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

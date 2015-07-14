@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SRVN_time"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="SRVN Time" Height="235" Width="525">
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Settings" Click="MenuItem_Click">
                 </MenuItem>
             </Menu>
-            <StackPanel x:Name="panel"></StackPanel>
-        </DockPanel>    
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <StackPanel  x:Name="panel" Orientation="Horizontal" />
+            </ScrollViewer>
+        </DockPanel>
     </Grid>
 </Window>

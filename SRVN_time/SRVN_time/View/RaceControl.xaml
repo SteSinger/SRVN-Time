@@ -5,19 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SRVN_time"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <ListView x:Name="listView" HorizontalAlignment="Left" Height="100" Margin="18.045,42.661,0,0" VerticalAlignment="Top" Width="101.128">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-            <Label x:Name="label" Content="Label" Height="120.677" Width="1.128"/>
-        </ListView>
-        <Label x:Name="lblR" Content="R" HorizontalAlignment="Left" Margin="18.045,14.661,0,0" VerticalAlignment="Top" Width="20.437"/>
-        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="38.482,14.661,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80.691"/>
-        <Button x:Name="btnSave" Content="Speichern" HorizontalAlignment="Left" Margin="18.045,147.661,0,0" VerticalAlignment="Top" Width="101.128" Click="button_Click"/>
+             d:DesignHeight="300" d:DesignWidth="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis" />
 
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="174">
+        <TextBlock Margin="20,12,0,146" MinWidth="50" Text="Rennen" 
+    		Foreground="LightSteelBlue" Visibility="{Binding Text.IsEmpty, Converter={StaticResource boolToVis}, ElementName=txtRace}" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" />
+        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="17,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="55" KeyDown="txtRace_KeyDown" Background="{x:Null}" />
+        <Button x:Name="btnSave" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="76.917,9,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="button_Click" HorizontalAlignment="Left" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}">
+            <Image x:Name="image" Height="20" Width="20" Source="/SRVN_time;component/Resources/Save_6530.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Button>
+        <ListBox x:Name="raceTimes" HorizontalAlignment="Left" Margin="17,38,0,10" Width="84" SelectionMode="Extended"/>
     </Grid>
+
 </UserControl>
