@@ -12,7 +12,7 @@
                 <MenuItem Header="Settings" Click="MenuItem_Click">
                 </MenuItem>
             </Menu>
-            <StackPanel></StackPanel>
+            <StackPanel x:Name="panel"></StackPanel>
         </DockPanel>    
     </Grid>
 </Window>

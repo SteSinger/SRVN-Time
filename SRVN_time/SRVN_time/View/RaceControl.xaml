@@ -7,13 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ListView x:Name="listView" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100">
+        <ListView x:Name="listView" HorizontalAlignment="Left" Height="100" Margin="18.045,42.661,0,0" VerticalAlignment="Top" Width="101.128">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
                 </GridView>
             </ListView.View>
+            <Label x:Name="label" Content="Label" Height="120.677" Width="1.128"/>
         </ListView>
+        <Label x:Name="lblR" Content="R" HorizontalAlignment="Left" Margin="18.045,14.661,0,0" VerticalAlignment="Top" Width="20.437"/>
+        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="38.482,14.661,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="80.691"/>
+        <Button x:Name="btnSave" Content="Speichern" HorizontalAlignment="Left" Margin="18.045,147.661,0,0" VerticalAlignment="Top" Width="101.128" Click="button_Click"/>
 
     </Grid>
 </UserControl>

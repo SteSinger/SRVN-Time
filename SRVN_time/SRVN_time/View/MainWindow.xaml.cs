@@ -21,6 +21,8 @@ namespace SRVN_time
         public MainWindow()
         {
             InitializeComponent();
+            panel.Children.Add(new RaceControl(null));
+            //AddChild(new RaceControl(null));
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

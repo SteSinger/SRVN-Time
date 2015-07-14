@@ -26,8 +26,12 @@ namespace SRVN_time
         public SettingsWindow()
         {
             InitializeComponent();
-
+            usbDevices.ItemsSource = UsbStrings;
+            usbDevices.DisplayMemberPath = "Port";
+            usbDevices.SelectedValuePath = "Port";
+            
             FillUsbList();
+            usbDevices.SelectedIndex = 0;
         }
 
         public List<USBInfo> UsbStrings
@@ -46,30 +50,11 @@ namespace SRVN_time
         private void FillUsbList()
         {
 
-
-            /*            ManagementObjectCollection collection;
-                        using (var searcher = new ManagementObjectSearcher(@"Select * From Win32_USBHub"))
-                        {
-                            collection = searcher.Get();
-                        }
-
-                        foreach (var device in collection)
-                        {
-                            usbStrings.Add( String.Format("{0} {1} {2}", (string)device.GetPropertyValue("DeviceID"), (string)device.GetPropertyValue("PNPDeviceID"), (string)device.GetPropertyValue("Description")));
-
-                        }
-                        */
-
             foreach (var s in SerialPort.GetPortNames())
             {
                 usbStrings.Add(new USBInfo(s));
                 Trace.WriteLine(s);
             }
-            
-
-            /*foreach (var s in usbStrings)
-                Trace.WriteLine(s);
-                */
         }
 
         private void usbDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
