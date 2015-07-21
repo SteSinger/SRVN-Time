@@ -11,14 +11,14 @@
 
     </UserControl.Resources>
 
-    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="174">
+    <Grid VerticalAlignment="Top" Height="174" HorizontalAlignment="Left">
         <TextBlock Margin="20,12,0,146" MinWidth="50" Text="Rennen" 
     		Foreground="LightSteelBlue" Visibility="{Binding Text.IsEmpty, Converter={StaticResource boolToVis}, ElementName=txtRace}" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" />
         <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="17,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="55" KeyDown="txtRace_KeyDown" Background="{x:Null}" />
         <Button x:Name="btnSave" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="76.917,9,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="button_Click" HorizontalAlignment="Left" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}">
             <Image x:Name="image" Height="20" Width="20" Source="/SRVN_time;component/Resources/Save_6530.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Button>
-        <ListBox x:Name="raceTimes" HorizontalAlignment="Left" Margin="17,38,0,10" Width="84" SelectionMode="Extended"/>
+        <ListBox x:Name="raceTimes" Margin="17,38,0,10" Width="84" SelectionMode="Extended"/>
     </Grid>
 
 </UserControl>

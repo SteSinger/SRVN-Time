@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SRVN_time
 {
@@ -21,12 +16,15 @@ namespace SRVN_time
     {
 
         Race race = new Race("");
+        List<TimeSpan> times;
 
         public RaceControl(List<TimeSpan> times)
         {
             InitializeComponent();
 
             raceTimes.ItemsSource = times;
+            raceTimes.ItemStringFormat = "mm\\:ss\\.ff";
+            this.times = times;
 
         }
 
@@ -46,13 +44,18 @@ namespace SRVN_time
             bool success = false;
             if (!String.IsNullOrEmpty(txtRace.Text))
             {
-                
-
-
                 if (race.IsValid())
                 {
                     txtRace.Text = race.Name;
-                    success = true;
+
+                using (var file = new StreamWriter(race.Name, false, Encoding.ASCII))
+                    {
+                        foreach (TimeSpan ts in times)
+                        {
+                            file.WriteLine(ts.ToString(@"mm\:ss\.ff"));
+                        }
+                        success = true;
+                    }
                 }
             }
 
