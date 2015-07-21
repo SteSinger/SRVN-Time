@@ -1,0 +1,16 @@
+﻿<Window x:Class="SRVN_time.View.TimeOffset"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SRVN_time.View"
+        mc:Ignorable="d"
+        Title="TimeOffset" Height="88.636" Width="195.273" WindowStyle="None" ResizeMode="NoResize" SizeToContent="WidthAndHeight">
+    <Grid RenderTransformOrigin="0.495,0.766" Background="#FFABCDFF">
+        <Label x:Name="label" Content="Offset:" HorizontalAlignment="Left" Margin="10,10,0,10" VerticalAlignment="Top" Height="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Padding="5"/>
+        <TextBox x:Name="txtTime" HorizontalAlignment="Left" Height="24" Margin="60,10,0,10" TextWrapping="NoWrap" Text="00:00,00" VerticalAlignment="Top" Width="53" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" KeyDown="txtTime_KeyDown"/>
+        <Button x:Name="btnAdd" Content="+" HorizontalAlignment="Left" Margin="118,10,0,10" VerticalAlignment="Top" Width="24" Height="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="btnAdd_Click" Padding="1"/>
+        <Button x:Name="btnSubt" Content="-" Margin="147,10,10,10" VerticalAlignment="Top" Height="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="btnSubt_Click" HorizontalAlignment="Left" Width="24" Padding="1"/>
+
+    </Grid>
+</Window>

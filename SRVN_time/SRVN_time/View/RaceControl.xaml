@@ -5,20 +5,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SRVN_time"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" HorizontalAlignment="Left" VerticalAlignment="Top">
+             d:DesignHeight="300" d:DesignWidth="300" HorizontalAlignment="Left" VerticalAlignment="Top" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis" />
 
     </UserControl.Resources>
 
-    <Grid VerticalAlignment="Top" Height="174" HorizontalAlignment="Left">
+    <Grid FocusManager.FocusedElement="{Binding ElementName=txtRace}" VerticalAlignment="Top" Height="174" HorizontalAlignment="Left">
         <TextBlock Margin="20,12,0,146" MinWidth="50" Text="Rennen" 
     		Foreground="LightSteelBlue" Visibility="{Binding Text.IsEmpty, Converter={StaticResource boolToVis}, ElementName=txtRace}" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" />
-        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="17,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="55" KeyDown="txtRace_KeyDown" Background="{x:Null}" />
+        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="17,10,0,0" VerticalAlignment="Top" Width="55" KeyDown="txtRace_KeyDown" Background="{x:Null}" TextWrapping="NoWrap" />
         <Button x:Name="btnSave" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="76.917,9,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="button_Click" HorizontalAlignment="Left" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}">
             <Image x:Name="image" Height="20" Width="20" Source="/SRVN_time;component/Resources/Save_6530.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Button>
-        <ListBox x:Name="raceTimes" Margin="17,38,0,10" Width="84" SelectionMode="Extended"/>
+        <ListBox x:Name="raceTimes" Margin="17,38,0,10" Width="84" SelectionMode="Extended" KeyDown="raceTimes_KeyDown">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+                    <EventSetter Event="PreviewKeyDown" Handler="ListBoxItem_KeyDown" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+                 
     </Grid>
 
 </UserControl>

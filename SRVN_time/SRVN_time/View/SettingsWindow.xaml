@@ -8,10 +8,12 @@
         xmlns:p="clr-namespace:SRVN_time.Properties"
         
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="300" Closed="Window_Closed">
+        Title="SettingsWindow" Height="300" Width="300" ResizeMode="NoResize" Topmost="True">
     <Grid>
-        <ComboBox x:Name="usbDevices" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="usbDevices_SelectionChanged" IsSynchronizedWithCurrentItem="True"/>
+        <ComboBox x:Name="usbDevices" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="120" />
         <TextBox x:Name="txtFolderPath" HorizontalAlignment="Left" Height="23" Margin="10,37,0,0" VerticalAlignment="Top" Text="{Binding Source={x:Static p:Settings.Default }, Mode=TwoWay, Path=savePath}" Width="120" TextWrapping="NoWrap" />
         <Button x:Name="button" Content="Select Folder" HorizontalAlignment="Left" Margin="135,40,0,0" VerticalAlignment="Top" Width="75" Click="folderSelection_Click"/>
+        <Button x:Name="btnCancel" Content="Cancel" Margin="0,0,10,10" VerticalAlignment="Bottom" Click="btnCancel_Click" HorizontalAlignment="Right" Width="76"/>
+        <Button x:Name="btnSave" Content="Save" Margin="0,0,91,10" Click="btnSave_Click" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

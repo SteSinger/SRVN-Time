@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Management;
+﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Diagnostics;
 using System.IO.Ports;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using SRVN_time.Properties;
@@ -24,19 +12,29 @@ namespace SRVN_time
     public partial class SettingsWindow : Window
     {
         private List<USBInfo> usbStrings = new List<USBInfo>();
-        string currentDirectory = "";
 
-        
-
-        public SettingsWindow()
+        public SettingsWindow(string portName, bool force = false)
         {
             InitializeComponent();
+
+            FillUsbList();
             usbDevices.ItemsSource = UsbStrings;
             usbDevices.DisplayMemberPath = "Port";
             usbDevices.SelectedValuePath = "Port";
-            
-            FillUsbList();
-            usbDevices.SelectedIndex = 0;
+
+            for(int i =0; i<UsbStrings.Count; i++)
+            {
+                if (UsbStrings[i].Port.Equals(portName))
+                {
+                    usbDevices.SelectedIndex = i;
+                }
+            }
+
+            if (force)
+            {
+                btnCancel.IsEnabled = false;
+                WindowStyle = WindowStyle.None;
+            }
         }
 
         public List<USBInfo> UsbStrings
@@ -46,10 +44,6 @@ namespace SRVN_time
                 return usbStrings;
             }
 
-            set
-            {
-                usbStrings = value;
-            }
         }
 
         public string CurrentDirectory
@@ -61,8 +55,7 @@ namespace SRVN_time
 
             set
             {
-                txtFolderPath.Text = value;
-
+                Settings.Default.savePath = value;
             }
         }
 
@@ -72,14 +65,9 @@ namespace SRVN_time
             foreach (var s in SerialPort.GetPortNames())
             {
                 usbStrings.Add(new USBInfo(s));
-                Trace.WriteLine(s);
             }
         }
 
-        private void usbDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
 
         private void folderSelection_Click(object sender, RoutedEventArgs e)
         {
@@ -97,19 +85,29 @@ namespace SRVN_time
             dlg.EnsureValidNames = true;
             dlg.Multiselect = false;
             dlg.ShowPlacesList = true;
-            
+
 
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 CurrentDirectory = dlg.FileName;
-                
+
             }
             this.Focus();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             Settings.Default.Save();
+            DialogResult = true;
+            Close();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.Reload();
+            DialogResult = false;
+            Close();
         }
     }
 }

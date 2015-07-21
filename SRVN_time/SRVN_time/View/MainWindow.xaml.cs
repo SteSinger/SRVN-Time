@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.IO.Ports;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Collections.ObjectModel;
 
 namespace SRVN_time
 {
@@ -21,23 +12,37 @@ namespace SRVN_time
     /// </summary>
     public partial class MainWindow : Window
     {
-        SerialPort port = new SerialPort("COM4", 9600);
-        List<TimeSpan> list = new List<TimeSpan>();
+        SerialPort port = new SerialPort();
+        ObservableCollection<TimeSpan> list = new ObservableCollection<TimeSpan>();
         char timeStopped = '#';
         public MainWindow()
         {
             InitializeComponent();
 
             port.DataReceived += new SerialDataReceivedEventHandler(DataHandler);
-            port.Open();
+            port.BaudRate = 9600;
         }
 
         
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            SettingsWindow settings = new SettingsWindow();
-            settings.ShowDialog();
+            ShowSettings();
+        }
+
+        private void ShowSettings(bool force = false)
+        {
+            SettingsWindow settings = new SettingsWindow(port.PortName, force);
+            if (settings.ShowDialog() == true)
+            {
+                var info = settings.usbDevices.SelectedItem as USBInfo;
+                if (info != null && !info.Port.Equals(port.PortName))
+                {
+                    port.Close();
+                    port.PortName = info.Port;
+                    port.Open();
+                }
+            }
         }
 
         private void DataHandler(object sender, SerialDataReceivedEventArgs args)
@@ -53,11 +58,14 @@ namespace SRVN_time
 
                 disp.Invoke(new Action(() =>
                 {
-                    panel.Children.Insert(0, new RaceControl(list));
+                    var raceC = new RaceControl(list);
+                    raceC.Focus();
+                    panel.Children.Insert(0, raceC);
+                    
                 }));
 
                 
-                list = new List<TimeSpan>();
+                list = new ObservableCollection<TimeSpan>();
             }
             else
             {
@@ -75,6 +83,17 @@ namespace SRVN_time
             
             
 
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            port.Close();
+            port.Dispose();
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+            ShowSettings(true);
         }
     }
 }
