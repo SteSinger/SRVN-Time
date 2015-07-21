@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Diagnostics;
 using System.Windows.Threading;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
 
 namespace SRVN_time
 {
@@ -35,12 +36,24 @@ namespace SRVN_time
             SettingsWindow settings = new SettingsWindow(port.PortName, force);
             if (settings.ShowDialog() == true)
             {
+                lblConnection.Content = "Not connected!";
+                lblConnection.Foreground = Brushes.IndianRed;
                 var info = settings.usbDevices.SelectedItem as USBInfo;
                 if (info != null && !info.Port.Equals(port.PortName))
                 {
                     port.Close();
                     port.PortName = info.Port;
-                    port.Open();
+                    try
+                    {
+                        port.Open();
+                        lblConnection.Content = "Connected on " + info.Port;
+                        lblConnection.Foreground = Brushes.Green;
+                    }
+                    catch (System.IO.IOException e)
+                    {
+                        
+                    }
+                    
                 }
             }
         }
