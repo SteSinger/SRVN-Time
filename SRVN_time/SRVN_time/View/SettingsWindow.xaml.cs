@@ -41,10 +41,11 @@ namespace SRVN_time
             {
                 btnCancel.IsEnabled = false;
                 WindowStyle = WindowStyle.None;
+                if (UsbStrings.Count > 0)
+                {
+                    usbDevices.SelectedIndex = 0;
+                }
             }
-
-            
-
         }
 
         public ObservableCollection<USBInfo> UsbStrings
@@ -74,8 +75,12 @@ namespace SRVN_time
             Dispatcher.Invoke(new Action(() =>
             {
                 FillUsbList();
+                if(usbDevices.SelectedIndex < 0 && UsbStrings.Count > 0)
+                {
+                    usbDevices.SelectedIndex = 0;
+                }
             }));
-            
+
         }
 
         private void FillUsbList()

@@ -18,7 +18,7 @@ namespace SRVN_time
 
         Race race = new Race("");
         ObservableCollection<TimeSpan> times;
-
+        
         public RaceControl(ObservableCollection<TimeSpan> times)
         {
             InitializeComponent();
@@ -26,6 +26,7 @@ namespace SRVN_time
             raceTimes.ItemsSource = times;
             raceTimes.ItemStringFormat = "mm\\:ss\\.ff";
             this.times = times;
+
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -103,39 +104,41 @@ namespace SRVN_time
                 {
                     if (index > 0)
                     {
-                        lb.SelectedIndex = index - 1;
+                        index -= 1;
                     }
-                    else if (index < times.Count)
+                    else if (index >= times.Count)
                     {
-                        lb.SelectedIndex = index;
+                        index = times.Count;
                     }
-
+                    lb.SelectedIndex = index;
                     ListBoxItem item = lb.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
                     item.Focus();
                 }
 
-                
+
             }
         }
 
+        // Manipulate selected time
         private void ListBoxItem_MouseDoubleClick(object sender, EventArgs e)
         {
             ListBoxItem li = sender as ListBoxItem;
             var ts = (TimeSpan)li.Content;
-            DisplayOffset(ts);
+            DisplayAndChangeTime(ts);
         }
 
+        // Manipulate selected time
         private void ListBoxItem_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter || e.Key == Key.Return)
             {
                 ListBoxItem li = sender as ListBoxItem;
                 var ts = (TimeSpan)li.Content;
-                DisplayOffset(ts);
+                DisplayAndChangeTime(ts);
             }
         }
 
-        private void DisplayOffset(TimeSpan ts)
+        private void DisplayAndChangeTime(TimeSpan ts)
         {
             if (times.Contains(ts))
             {
@@ -149,19 +152,11 @@ namespace SRVN_time
                 }
                 Point p = this.PointToScreen(new Point(0, 0));
 
-                TimeOffset offset = new TimeOffset() { Left = p.X, Top = p.Y };
+                TimeOffset offset = new TimeOffset(ts) { Left = p.X, Top = p.Y };
 
                 if (offset.ShowDialog() == true)
                 {
-                    if (offset.Add)
-                    {
-                        ts = ts.Add(offset.Time);
-                    }
-                    else
-                    {
-                        ts = ts.Subtract(offset.Time);
-                    }
-                    times[index] = ts;
+                    times[index] = offset.Time;
                     txtRace.Background = null;
                 }
             }
@@ -172,9 +167,15 @@ namespace SRVN_time
             txtRace.Focus();
         }
 
+        // add an offset to all times
         private void btnOffset_Click(object sender, RoutedEventArgs e)
         {
-            Point p = this.PointToScreen(new Point(0, 0));
+            Offset();
+        }
+
+        private void Offset()
+        {
+            Point p = PointToScreen(new Point(0, 0));
 
             TimeOffset offset = new TimeOffset() { Left = p.X, Top = p.Y };
 
@@ -196,6 +197,20 @@ namespace SRVN_time
 
                 txtRace.Background = null;
             }
+        }
+
+        private void ListRightClick_Change(object sender, RoutedEventArgs e)
+        {
+            if (raceTimes.SelectedItem != null)
+            {
+                TimeSpan ts = (TimeSpan)raceTimes.SelectedItem;
+                DisplayAndChangeTime(ts);
+            }
+        }
+
+        private void ListRightClick_Offset(object sender, RoutedEventArgs e)
+        {
+            Offset();
         }
     }
 }

@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SRVN_time.View
 {
@@ -54,6 +45,16 @@ namespace SRVN_time.View
             txtTime.Focus();
         }
 
+        public TimeOffset(TimeSpan ts)
+        {
+            InitializeComponent();
+
+            txtTime.Focus();
+            txtTime.Text = ts.ToString(@"mm\:ss\.ff");
+            btnAdd.Visibility = Visibility.Hidden;
+            btnSubt.Visibility = Visibility.Hidden;
+        }
+
         private void btnSubt_Click(object sender, RoutedEventArgs e)
         {
             SubtractTime();
@@ -80,7 +81,7 @@ namespace SRVN_time.View
 
         private void ParseTime()
         {
-            DialogResult = TimeSpan.TryParseExact(txtTime.Text, @"mm\:ss\,ff", null, out ts);
+            DialogResult = TimeSpan.TryParseExact(txtTime.Text, @"mm\:ss\.ff", null, out ts);
         }
 
         private void txtTime_KeyDown(object sender, KeyEventArgs e)

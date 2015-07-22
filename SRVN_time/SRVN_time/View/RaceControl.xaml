@@ -11,14 +11,20 @@
 
     </UserControl.Resources>
 
-    <Grid FocusManager.FocusedElement="{Binding ElementName=txtRace}" VerticalAlignment="Top" Height="226" HorizontalAlignment="Left">
-        <TextBlock Margin="20,12,0,146" MinWidth="50" Text="Rennen" 
+    <Grid FocusManager.FocusedElement="{Binding ElementName=txtRace}" VerticalAlignment="Top" Height="193" HorizontalAlignment="Left">
+        <TextBlock Margin="10,13,0,164" MinWidth="50" Text="Rennen" 
     		Foreground="LightSteelBlue" Visibility="{Binding Text.IsEmpty, Converter={StaticResource boolToVis}, ElementName=txtRace}" HorizontalAlignment="Left" VerticalAlignment="Center" IsEnabled="False" />
-        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="17,10,0,0" VerticalAlignment="Top" Width="55" KeyDown="txtRace_KeyDown" Background="{x:Null}" TextWrapping="NoWrap" />
-        <Button x:Name="btnSave" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="76.917,9,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="button_Click" HorizontalAlignment="Left" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}">
+        <TextBox x:Name="txtRace" HorizontalAlignment="Left" Height="23" Margin="8,10,0,0" VerticalAlignment="Top" Width="55" KeyDown="txtRace_KeyDown" Background="{x:Null}" TextWrapping="NoWrap" VerticalContentAlignment="Center" />
+        <Button x:Name="btnSave" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="67,9,0,0" VerticalAlignment="Top" Width="24" Height="24" Click="button_Click" HorizontalAlignment="Left" Background="{x:Null}" Foreground="{x:Null}" BorderBrush="{x:Null}">
             <Image x:Name="image" Height="20" Width="20" Source="/SRVN_time;component/Resources/Save_6530.png" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Button>
-        <ListBox x:Name="raceTimes" Margin="17,38,0,0" Width="84" SelectionMode="Extended" KeyDown="raceTimes_KeyDown" Height="126" VerticalAlignment="Top">
+        <ListBox x:Name="raceTimes" Margin="9,38,8,0" Width="84" SelectionMode="Extended" KeyDown="raceTimes_KeyDown" Height="126" VerticalAlignment="Top">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Change time" Click="ListRightClick_Change"/>
+                    <MenuItem Header="Offset all times" Click="ListRightClick_Offset"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
@@ -26,7 +32,7 @@
                 </Style>
             </ListBox.ItemContainerStyle>
         </ListBox>
-        <Button x:Name="btnOffset" Content="Offset" HorizontalAlignment="Left" Margin="17,169,0,0" VerticalAlignment="Top" Width="84" Click="btnOffset_Click"/>
+        <Button x:Name="btnOffset" Content="Offset" HorizontalAlignment="Left" Margin="8,169,0,0" VerticalAlignment="Top" Width="84" Click="btnOffset_Click"/>
 
     </Grid>
 
