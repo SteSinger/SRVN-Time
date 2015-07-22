@@ -98,6 +98,23 @@ namespace SRVN_time
                 {
                     times.RemoveAt(index);
                 }
+
+                if (times.Count > 0)
+                {
+                    if (index > 0)
+                    {
+                        lb.SelectedIndex = index - 1;
+                    }
+                    else if (index < times.Count)
+                    {
+                        lb.SelectedIndex = index;
+                    }
+
+                    ListBoxItem item = lb.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
+                    item.Focus();
+                }
+
+                
             }
         }
 
@@ -153,6 +170,32 @@ namespace SRVN_time
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             txtRace.Focus();
+        }
+
+        private void btnOffset_Click(object sender, RoutedEventArgs e)
+        {
+            Point p = this.PointToScreen(new Point(0, 0));
+
+            TimeOffset offset = new TimeOffset() { Left = p.X, Top = p.Y };
+
+            if (offset.ShowDialog() == true)
+            {
+                for (int i = 0; i < times.Count; i++)
+                {
+                    TimeSpan ts = times[i];
+                    if (offset.Add)
+                    {
+                        ts = ts.Add(offset.Time);
+                    }
+                    else
+                    {
+                        ts = ts.Subtract(offset.Time);
+                    }
+                    times[i] = ts;
+                }
+
+                txtRace.Background = null;
+            }
         }
     }
 }

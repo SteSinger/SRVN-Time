@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SRVN_time
 {
-    public class USBWatcher
+    public sealed class USBWatcher : IDisposable
     {
         private ManagementEventWatcher plugInWatcher;
         private ManagementEventWatcher unPlugWatcher;
@@ -15,14 +15,6 @@ namespace SRVN_time
 
         public USBPlugged usbPlugged;
         public USBUnplugged usbUnplugged;
-
-
-
-
-        ~USBWatcher()
-        {
-            Dispose();
-        }
 
 
         public void Dispose()

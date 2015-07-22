@@ -11,12 +11,12 @@ namespace SRVN_time
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
         SerialPort port = new SerialPort();
         ObservableCollection<TimeSpan> list = new ObservableCollection<TimeSpan>();
         char timeStopped = '#';
-
+        private string backlog;
         USBWatcher watcher = new USBWatcher();
 
         public MainWindow()
@@ -39,6 +39,7 @@ namespace SRVN_time
                         lblConnection.Content = "Not connected!";
                         lblConnection.Foreground = Brushes.IndianRed;
                         port.Close();
+                        port.Dispose();
                     }));
                 }
             };
@@ -81,11 +82,13 @@ namespace SRVN_time
         private void DataHandler(object sender, SerialDataReceivedEventArgs args)
         {
             SerialPort sp = (SerialPort)sender;
-            string input = sp.ReadExisting();
+            string input = backlog + sp.ReadExisting();
+            
+
             string[] times = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-            for(int i =0; i< times.Length; i++) 
+            for (int i = 0; i < times.Length; i++)
             {
                 var time = times[i];
                 if (timeStopped == time[0])
@@ -100,8 +103,9 @@ namespace SRVN_time
 
                     }));
 
-
                     list = new ObservableCollection<TimeSpan>();
+
+                    Trace.WriteLine("Race finished");
                 }
                 else
                 {
@@ -110,27 +114,67 @@ namespace SRVN_time
                         // add leading zero
                         time = "0" + time;
                     }
+                    TimeSpan ts;
+                    bool valid = TimeSpan.TryParseExact(time, "mm\\:ss\\,ff", null, out ts);
 
-                    TimeSpan ts = TimeSpan.ParseExact(time, "mm\\:ss\\,ff", null);
-                    list.Add(ts);
+                    if (valid)
+                    {
+                        list.Add(ts);
+                        Trace.WriteLine(ts.ToString("mm\\:ss\\.ff"));
+                    }
+                    else
+                    {
+                        Trace.WriteLine("time not valid " + time);
+                        backlog = time;
+                    }
 
-                    Trace.WriteLine(ts.ToString("mm\\:ss\\.ff"));
+                    
                 }
 
             }
 
         }
 
-    
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ShowSettings(true);
         }
 
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    watcher.Dispose();
+                    port.Close();
+                    port.Dispose();
+                }
+
+                watcher = null;
+                port = null;
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+
+        }
+        #endregion
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            port.Close();
-            port.Dispose();
+            Dispose();
         }
     }
 }
