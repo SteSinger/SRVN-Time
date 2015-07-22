@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SRVN_time
 {
-    public class USBInfo
+    public class USBInfo : IComparable
     {
         string _port;
 
@@ -24,6 +24,17 @@ namespace SRVN_time
             {
                 _port = value;
             }
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is USBInfo)
+            {
+                var info = obj as USBInfo;
+                return _port.CompareTo(info.Port);
+            }
+
+            throw new ArgumentException();
         }
     }
 }

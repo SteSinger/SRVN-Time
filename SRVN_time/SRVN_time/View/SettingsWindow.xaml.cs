@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.IO.Ports;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using SRVN_time.Properties;
+using System.Collections.ObjectModel;
+using System;
 
 namespace SRVN_time
 {
@@ -11,18 +12,24 @@ namespace SRVN_time
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        private List<USBInfo> usbStrings = new List<USBInfo>();
+        private ObservableCollection<USBInfo> usbStrings = new ObservableCollection<USBInfo>();
 
-        public SettingsWindow(string portName, bool force = false)
+        private USBWatcher watcher;
+
+        public SettingsWindow(string portName, bool force, USBWatcher watcher)
         {
             InitializeComponent();
+
+            this.watcher = watcher;
+            watcher.usbPlugged += FillUsbList;
+            watcher.usbUnplugged += FillUsbList;
 
             FillUsbList();
             usbDevices.ItemsSource = UsbStrings;
             usbDevices.DisplayMemberPath = "Port";
             usbDevices.SelectedValuePath = "Port";
 
-            for(int i =0; i<UsbStrings.Count; i++)
+            for (int i = 0; i < UsbStrings.Count; i++)
             {
                 if (UsbStrings[i].Port.Equals(portName))
                 {
@@ -35,9 +42,12 @@ namespace SRVN_time
                 btnCancel.IsEnabled = false;
                 WindowStyle = WindowStyle.None;
             }
+
+            
+
         }
 
-        public List<USBInfo> UsbStrings
+        public ObservableCollection<USBInfo> UsbStrings
         {
             get
             {
@@ -59,9 +69,18 @@ namespace SRVN_time
             }
         }
 
+        private void FillUsbList(string _)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                FillUsbList();
+            }));
+            
+        }
+
         private void FillUsbList()
         {
-
+            usbStrings.Clear();
             foreach (var s in SerialPort.GetPortNames())
             {
                 usbStrings.Add(new USBInfo(s));
@@ -108,6 +127,12 @@ namespace SRVN_time
             Settings.Default.Reload();
             DialogResult = false;
             Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            watcher.usbPlugged -= FillUsbList;
+            watcher.usbUnplugged -= FillUsbList;
         }
     }
 }

@@ -103,9 +103,6 @@ namespace SRVN_time.View
                 default:
                     break;
             }
-            
-
-
         }
     }
 }

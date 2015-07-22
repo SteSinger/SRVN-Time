@@ -16,15 +16,35 @@ namespace SRVN_time
         SerialPort port = new SerialPort();
         ObservableCollection<TimeSpan> list = new ObservableCollection<TimeSpan>();
         char timeStopped = '#';
+
+        USBWatcher watcher = new USBWatcher();
+
         public MainWindow()
         {
             InitializeComponent();
 
             port.DataReceived += new SerialDataReceivedEventHandler(DataHandler);
             port.BaudRate = 9600;
+
+            lblConnection.Content = "Not connected!";
+            lblConnection.Foreground = Brushes.IndianRed;
+
+            watcher.Start();
+            watcher.usbUnplugged += name =>
+            {
+                if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(port.PortName) && name.ToUpper().Contains(port.PortName))
+                {
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        lblConnection.Content = "Not connected!";
+                        lblConnection.Foreground = Brushes.IndianRed;
+                        port.Close();
+                    }));
+                }
+            };
         }
 
-        
+
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
@@ -33,13 +53,12 @@ namespace SRVN_time
 
         private void ShowSettings(bool force = false)
         {
-            SettingsWindow settings = new SettingsWindow(port.PortName, force);
+            SettingsWindow settings = new SettingsWindow(port.PortName, force, watcher);
             if (settings.ShowDialog() == true)
             {
-                lblConnection.Content = "Not connected!";
-                lblConnection.Foreground = Brushes.IndianRed;
+
                 var info = settings.usbDevices.SelectedItem as USBInfo;
-                if (info != null && !info.Port.Equals(port.PortName))
+                if (info != null && (force || !info.Port.Equals(port.PortName)))
                 {
                     port.Close();
                     port.PortName = info.Port;
@@ -51,9 +70,10 @@ namespace SRVN_time
                     }
                     catch (System.IO.IOException e)
                     {
-                        
+                        lblConnection.Content = "Not connected!";
+                        lblConnection.Foreground = Brushes.IndianRed;
                     }
-                    
+
                 }
             }
         }
@@ -61,52 +81,56 @@ namespace SRVN_time
         private void DataHandler(object sender, SerialDataReceivedEventArgs args)
         {
             SerialPort sp = (SerialPort)sender;
-            string time = sp.ReadExisting();
-            time = time.TrimEnd(new char[]{'\r', '\n' });
+            string input = sp.ReadExisting();
+            string[] times = input.Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-            if(timeStopped == time[0])
+            for(int i =0; i< times.Length; i++) 
             {
-                Dispatcher disp = panel.Dispatcher;
-
-                disp.Invoke(new Action(() =>
+                var time = times[i];
+                if (timeStopped == time[0])
                 {
-                    var raceC = new RaceControl(list);
-                    raceC.Focus();
-                    panel.Children.Insert(0, raceC);
-                    
-                }));
+                    Dispatcher disp = panel.Dispatcher;
 
-                
-                list = new ObservableCollection<TimeSpan>();
-            }
-            else
-            {
-                if (time[1] == ':')
+                    disp.Invoke(new Action(() =>
+                    {
+                        var raceC = new RaceControl(list);
+                        raceC.Focus();
+                        panel.Children.Insert(0, raceC);
+
+                    }));
+
+
+                    list = new ObservableCollection<TimeSpan>();
+                }
+                else
                 {
-                    // add leading zero
-                    time = "0" + time;
+                    if (time[1] == ':')
+                    {
+                        // add leading zero
+                        time = "0" + time;
+                    }
+
+                    TimeSpan ts = TimeSpan.ParseExact(time, "mm\\:ss\\,ff", null);
+                    list.Add(ts);
+
+                    Trace.WriteLine(ts.ToString("mm\\:ss\\.ff"));
                 }
 
-                TimeSpan ts = TimeSpan.ParseExact(time, "mm\\:ss\\,ff", null);
-                list.Add(ts);
-                
-                Trace.WriteLine(ts.ToString("mm\\:ss\\.ff"));
             }
-            
-            
 
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+    
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ShowSettings(true);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             port.Close();
             port.Dispose();
-        }
-
-        private void Window_Initialized(object sender, EventArgs e)
-        {
-            ShowSettings(true);
         }
     }
 }

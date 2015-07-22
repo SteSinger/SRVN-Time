@@ -18,7 +18,7 @@ namespace SRVN_time
 
         Race race = new Race("");
         ObservableCollection<TimeSpan> times;
-        
+
         public RaceControl(ObservableCollection<TimeSpan> times)
         {
             InitializeComponent();
@@ -61,9 +61,9 @@ namespace SRVN_time
                                 success = true;
                             }
                         }
-                        catch(UnauthorizedAccessException e)
+                        catch (UnauthorizedAccessException e)
                         {
-                            
+
                         }
                     }
                 }
@@ -81,7 +81,7 @@ namespace SRVN_time
 
         private void txtRace_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 saveTimes();
             }
@@ -100,7 +100,7 @@ namespace SRVN_time
                 }
             }
         }
-        
+
         private void ListBoxItem_MouseDoubleClick(object sender, EventArgs e)
         {
             ListBoxItem li = sender as ListBoxItem;
@@ -110,7 +110,7 @@ namespace SRVN_time
 
         private void ListBoxItem_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter || e.Key == Key.Return)
+            if (e.Key == Key.Enter || e.Key == Key.Return)
             {
                 ListBoxItem li = sender as ListBoxItem;
                 var ts = (TimeSpan)li.Content;
