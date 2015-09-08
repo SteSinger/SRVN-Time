@@ -22,7 +22,9 @@
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Change time" Click="ListRightClick_Change"/>
-                    <MenuItem Header="Offset all times" Click="ListRightClick_Offset"/>
+                    <MenuItem Header="Delete time" Click="ListRightClick_Delete"/>
+                    <MenuItem Header="Insert time" Click="ListRightClick_Insert"/>
+                    <MenuItem Header="Offset all times" Click="ListRightClick_Offset"/>                    
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.ItemContainerStyle>

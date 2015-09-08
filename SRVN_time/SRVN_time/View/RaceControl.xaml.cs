@@ -1,5 +1,6 @@
 ﻿using SRVN_time.View;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
@@ -53,8 +54,29 @@ namespace SRVN_time
                     {
                         try
                         {
-                            using (var file = new StreamWriter(path + "\\" + race.Name, false, Encoding.ASCII))
+                            using (var file = new StreamWriter(path + "\\" + race.Name + ".DAT", false, Encoding.ASCII))
                             {
+                                file.WriteLine("Hannover");
+                                foreach (TimeSpan ts in times)
+                                {
+                                    file.WriteLine(ts.ToString(@"mm\:ss\.ff"));
+                                }
+                                success = true;
+                            }
+                        }
+                        catch (UnauthorizedAccessException e)
+                        {
+
+                        }
+                    }
+                    path = Properties.Settings.Default.backupPath;
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        try
+                        {
+                            using (var file = new StreamWriter(path + "\\" + race.Name + ".DAT", false, Encoding.ASCII))
+                            {
+                                file.WriteLine("Hannover");
                                 foreach (TimeSpan ts in times)
                                 {
                                     file.WriteLine(ts.ToString(@"mm\:ss\.ff"));
@@ -92,30 +114,53 @@ namespace SRVN_time
         {
             if (e.Key == Key.Delete)
             {
-                ListBox lb = sender as ListBox;
-                int index = lb.SelectedIndex;
+                Delete(sender);
+            }
+            else if (e.Key == Key.Insert)
+            {
+                Insert();
+            }
 
-                if (index >= 0)
+        }
+
+        private void Delete(object sender)
+        {
+            ListBox lb = raceTimes;
+                        
+            int index = lb.SelectedIndex;
+
+            if (index >= 0)
+            {
+                times.RemoveAt(index);
+            }
+
+            if (times.Count > 0)
+            {
+                if (index > 0)
                 {
-                    times.RemoveAt(index);
+                    index -= 1;
                 }
-
-                if (times.Count > 0)
+                else if (index >= times.Count)
                 {
-                    if (index > 0)
-                    {
-                        index -= 1;
-                    }
-                    else if (index >= times.Count)
-                    {
-                        index = times.Count;
-                    }
-                    lb.SelectedIndex = index;
-                    ListBoxItem item = lb.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
-                    item.Focus();
+                    index = times.Count;
                 }
+                lb.SelectedIndex = index;
+                ListBoxItem item = lb.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
+                item.Focus();
+            }
+        }
 
+        public void Insert()
+        {
+            Point p = PointToScreen(new Point(0, 0));
 
+            TimeOffset offset = new TimeOffset() { Left = p.X, Top = p.Y };
+
+            if (offset.ShowDialog() == true)
+            {
+
+                AddSorted<TimeSpan>(times, offset.Time);
+                txtRace.Background = null;
             }
         }
 
@@ -156,7 +201,9 @@ namespace SRVN_time
 
                 if (offset.ShowDialog() == true)
                 {
-                    times[index] = offset.Time;
+                    times.RemoveAt(index);
+                    AddSorted(times, offset.Time);
+                    
                     txtRace.Background = null;
                 }
             }
@@ -212,5 +259,28 @@ namespace SRVN_time
         {
             Offset();
         }
+
+        private void ListRightClick_Insert(object sender, RoutedEventArgs e)
+        {
+            Insert();
+        }
+
+        private void ListRightClick_Delete(object sender, RoutedEventArgs e)
+        {
+            Delete(sender);
+        }
+
+        public void AddSorted<T>(IList<T> list, T item, IComparer<T> comparer = null)
+        {
+            if (comparer == null)
+                comparer = Comparer<T>.Default;
+
+            int i = 0;
+            while (i < list.Count && comparer.Compare(list[i], item) < 0)
+                i++;
+
+            list.Insert(i, item);
+        }
+
     }
 }

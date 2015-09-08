@@ -126,13 +126,9 @@ namespace SRVN_time
                     {
                         Trace.WriteLine("time not valid " + time);
                         backlog = time;
-                    }
-
-                    
+                    }                    
                 }
-
             }
-
         }
 
 

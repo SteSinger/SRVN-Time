@@ -40,7 +40,7 @@ namespace SRVN_time
             if (force)
             {
                 btnCancel.IsEnabled = false;
-                WindowStyle = WindowStyle.None;
+                //WindowStyle = WindowStyle.None;
                 if (UsbStrings.Count > 0)
                 {
                     usbDevices.SelectedIndex = 0;
@@ -67,6 +67,19 @@ namespace SRVN_time
             set
             {
                 Settings.Default.savePath = value;
+            }
+        }
+
+        public string BackupDirectory
+        {
+            get
+            {
+                return txtBackupPath.Text;
+            }
+
+            set
+            {
+                Settings.Default.backupPath = value;
             }
         }
 
@@ -114,6 +127,32 @@ namespace SRVN_time
             if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 CurrentDirectory = dlg.FileName;
+
+            }
+            this.Focus();
+        }
+
+        private void backupFolderSelection_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new CommonOpenFileDialog();
+            dlg.Title = "Choose backup location";
+            dlg.IsFolderPicker = true;
+            dlg.InitialDirectory = BackupDirectory;
+
+            dlg.AddToMostRecentlyUsedList = false;
+            dlg.AllowNonFileSystemItems = false;
+            dlg.DefaultDirectory = BackupDirectory;
+            dlg.EnsureFileExists = true;
+            dlg.EnsurePathExists = true;
+            dlg.EnsureReadOnly = false;
+            dlg.EnsureValidNames = true;
+            dlg.Multiselect = false;
+            dlg.ShowPlacesList = true;
+
+
+            if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                BackupDirectory = dlg.FileName;
 
             }
             this.Focus();
