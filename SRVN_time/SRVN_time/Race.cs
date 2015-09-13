@@ -54,7 +54,7 @@ namespace SRVN_time
                 bool valid = int.TryParse(subStr, out result);
 
                 
-                if((subStr == "F" || subStr == "V") && (_name.Substring(i+1, 1).ToUpper() != "F" && _name.Substring(i+1, 1).ToUpper() != "V"))
+                if((subStr == "F" || subStr == "V") && i+1 < _name.Length && (_name.Substring(i+1, 1).ToUpper() != "F" && _name.Substring(i+1, 1).ToUpper() != "V"))
                 {
                     break;
                 }

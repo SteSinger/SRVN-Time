@@ -44,10 +44,10 @@ namespace SRVN_time
                 }
             };
 
-            //list.Add(new TimeSpan(0, 2, 10));
-            //var raceC = new RaceControl(list);
-            //raceC.Focus();
-            //panel.Children.Insert(0, raceC);
+            list.Add(new TimeSpan(0, 2, 10));
+            var raceC = new RaceControl(list);
+            raceC.Focus();
+            panel.Children.Insert(0, raceC);
         }
 
 
