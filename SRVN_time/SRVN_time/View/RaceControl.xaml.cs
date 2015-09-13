@@ -64,7 +64,7 @@ namespace SRVN_time
                                 success = true;
                             }
                         }
-                        catch (UnauthorizedAccessException e)
+                        catch (Exception e)
                         {
 
                         }
@@ -84,7 +84,7 @@ namespace SRVN_time
                                 success = true;
                             }
                         }
-                        catch (UnauthorizedAccessException e)
+                        catch (Exception e)
                         {
 
                         }

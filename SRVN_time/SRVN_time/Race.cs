@@ -47,18 +47,22 @@ namespace SRVN_time
             }
 
             int length = 0;
-            for (int i = 0; i < 3; i++)
+            for (int i = 1; i <= 3; i++)
             {
                 int result = 0;
-                bool valid = Int32.TryParse(_name.Substring(3 - i, 1), out result);
+                var subStr = _name.Substring(i, 1).ToUpper();
+                bool valid = int.TryParse(subStr, out result);
 
-                if (valid)
+                
+                if((subStr == "F" || subStr == "V") && (_name.Substring(i+1, 1).ToUpper() != "F" && _name.Substring(i+1, 1).ToUpper() != "V"))
+                {
+                    break;
+                }
+                else if (Regex.IsMatch(subStr, "[0-9a-zA-Z]"))
                 {
                     length++;
-                } else
-                {
-                    length = 0;
                 }
+
             }
 
             // insert leading zeroes
@@ -96,7 +100,7 @@ namespace SRVN_time
 
         public bool IsValid(string raceName)
         {
-            return raceName.Length == 7 || Regex.IsMatch(raceName, "R[0-9]{3}[FV]-[0-9]");
+            return raceName.Length == 7 || Regex.IsMatch(raceName, "R[0-9a-zA-Z]{3}[FV]-[0-9]");
         }
     }
 }
