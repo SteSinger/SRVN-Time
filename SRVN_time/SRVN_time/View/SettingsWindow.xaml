@@ -8,7 +8,7 @@
         xmlns:p="clr-namespace:SRVN_time.Properties"
         
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="300" ResizeMode="NoResize" Topmost="True" Closing="Window_Closing">
+        Title="SettingsWindow" Height="300" Width="300" ResizeMode="NoResize" Topmost="True" Closing="Window_Closing" Icon="/SRVN_time;component/srvn.ico">
     <Grid>
         <ComboBox x:Name="usbDevices" HorizontalAlignment="Left" Margin="84,10,0,0" VerticalAlignment="Top" Width="126" />
         <TextBox x:Name="txtFolderPath" HorizontalAlignment="Left" Height="23" Margin="10,37,0,0" VerticalAlignment="Top" Text="{Binding Source={x:Static p:Settings.Default }, Mode=TwoWay, Path=savePath}" Width="120" TextWrapping="NoWrap" />
